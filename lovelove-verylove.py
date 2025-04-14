@@ -52,6 +52,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    print(f"📩 受信: {message.content}（from {message.author.id} in {message.channel.id}）")
     if message.author.bot:
         return
     if message.channel.id not in ALLOWED_CHANNEL_IDS:
