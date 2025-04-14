@@ -28,22 +28,26 @@ ALLOWED_CHANNEL_IDS = [int(cid.strip()) for cid in channel_ids_raw.split(',')]
 excluded_ids_raw = os.environ.get('EXCLUDED_USER_IDS', '')
 EXCLUDED_USER_IDS = [int(uid.strip()) for uid in excluded_ids_raw.split(',')] if excluded_ids_raw else []
 
+# デバッグログ出力
+print(f"✅ 許可チャンネル: {ALLOWED_CHANNEL_IDS}", flush=True)
+print(f"✅ 除外ユーザー: {EXCLUDED_USER_IDS}", flush=True)
+
 AA_RESPONSE = r"""
-    　　　　　　　　　　　　　　　　　　　　　　,. ､
+　　　　　　　　　　　　　　　　　　　　　　,. ､
                                       く　r',ゝ
-    r'￣￣￣￣￣￣￣￣￣ヽ　　　　　　　　　 ,ゝｰ'､
-    |　　　　　　　　　　|　　　　､　　　／　　   　ヽ.
-    |　　　　　　　　　　|　　　く、｀ ヽ/　∩　　   　|
-    |　 好き 好き 大好き 　＞　　　｀＞　　　　　 　　|
-    |　　　　　　　　　　|　　　 く´ , -'7　　　　　　レ个ー─┐
-    |　　　　　　　　　　|　　　　｀´　//　/　　　　ー个ー─'7
-    |　　　　　　　　　　|　　　　　　  //　/　　  　 _　 |　　 (
-    ゝ＿＿＿＿＿＿＿＿__ノ　　　　　　//　/'┤　　　 |ヽv'⌒ヽ､ゝ
-                            　　くﾉ　 lｰ┤　　　 ヽ.
-                             ｀^^'ｰ┤　　　　　▽_
-                            　((　　)　　　　　ヽ乙_
-                            　((　　)ヽ､　　　　　ヽレl
-                            　 ≧＿_ゝ　 ｀ﾞー-=､.＿_,ゝ
+r'￣￣￣￣￣￣￣￣￣ヽ　　　　　　　　　 ,ゝｰ'､
+|　　　　　　　　　　|　　　　､　　　／　　   　ヽ.
+|　　　　　　　　　　|　　　く、｀ ヽ/　∩　　   　|
+| 好き 好き 大好き 　＞　　　｀＞　　　　　 　　　|
+|　　　　　　　　　　|　　　 く´ , -'7　　　　　　レ个ー─┐
+|　　　　　　　　　　|　　　　｀´　//　/　　　　ー个ー─'7
+|　　　　　　　　　　|　　　　　　  //　/　　  　 _　 |　　 (
+ゝ＿＿＿＿＿＿＿＿__ノ　　　　　　//　/'┤　　　 |ヽv'⌒ヽ､ゝ
+                        　　くﾉ　 lｰ┤　　　 ヽ.
+                         ｀^^'ｰ┤　　　　　▽_
+                        　((　　)　　　　　ヽ乙_
+                        　((　　)ヽ､　　　　　ヽレl
+                     　 ≧＿_ゝ　 ｀ﾞー-=､.＿_,ゝ
 """
 
 @client.event
@@ -52,16 +56,19 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    print(f"📩 受信: {message.content}（from {message.author.id} in {message.channel.id}）")
+    print(f"📩 受信: {message.content}（from {message.author.id} in {message.channel.id}）", flush=True)
+    
     if message.author.bot:
         return
     if message.channel.id not in ALLOWED_CHANNEL_IDS:
+        print(f"⚠️ 無視（未許可チャンネル）: {message.channel.id}", flush=True)
         return
     if message.author.id in EXCLUDED_USER_IDS:
+        print(f"⚠️ 無視（除外ユーザー）: {message.author.id}", flush=True)
         return
     if re.search(YOUTUBE_REGEX, message.content):
         await asyncio.sleep(2)
-        await message.channel.send(AA_RESPONSE)
+        await message.channel.send(f"```\n{AA_RESPONSE}\n```")  # ← コードブロックで囲んでAA崩れ防止
 
 # Flaskをバックグラウンドで開始 → Botをメインスレッドで実行！
 if __name__ == '__main__':
