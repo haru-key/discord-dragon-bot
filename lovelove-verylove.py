@@ -34,7 +34,7 @@ print(f"✅ 除外ユーザー: {EXCLUDED_USER_IDS}", flush=True)
 
 AA_RESPONSE = r"""
 　　　　　　　　　　　　　　　　　　　　　,. ､
-                　                   く　r',ゝ
+                　                 く　r',ゝ
 r'￣￣￣￣￣￣￣￣￣ヽ　　　　　　　　　,ゝｰ'､
 |　　　　　　　　　　|　　　　､　　　／　　   　ヽ.
 |　　　　　　　　　　|　　　く、｀ ヽ/　∩　　   　|
